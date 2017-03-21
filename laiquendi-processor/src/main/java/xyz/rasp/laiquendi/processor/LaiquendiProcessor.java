@@ -19,6 +19,7 @@ import javax.lang.model.element.Name;
 import javax.lang.model.element.TypeElement;
 
 import xyz.rasp.laiquendi.core.LaiquendiLayoutId;
+import xyz.rasp.laiquendi.processor.types.TypeUtil;
 
 /**
  * Created by twiceYuan on 2017/3/20.
@@ -54,17 +55,17 @@ public class LaiquendiProcessor extends AbstractProcessor {
 
     private void buildViewClass(Element element, int layoutId, String originViewName, Class superClass) {
 
-        ClassName className = ClassName.create(originViewName);
+        ClassHelper classHelper = ClassHelper.create(originViewName);
 
         TypeSpec generatedClassName = ComponentBuilder.create()
                 .layoutId(layoutId)
                 .element(element)
                 .superClass(superClass)
                 .fullName(originViewName)
-                .simpleName(className.getSimpleName())
+                .simpleName(classHelper.getSimpleName())
                 .build();
 
-        JavaFile javaFile = JavaFile.builder(className.getPackage(), generatedClassName).build();
+        JavaFile javaFile = JavaFile.builder(classHelper.getPackage(), generatedClassName).build();
 
         try {
             javaFile.writeTo(filer);

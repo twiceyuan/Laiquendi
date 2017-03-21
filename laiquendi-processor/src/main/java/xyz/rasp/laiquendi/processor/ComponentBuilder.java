@@ -1,11 +1,5 @@
 package xyz.rasp.laiquendi.processor;
 
-import android.app.Activity;
-import android.content.Context;
-import android.util.AttributeSet;
-import android.view.View;
-import android.widget.FrameLayout;
-
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeName;
@@ -13,6 +7,8 @@ import com.squareup.javapoet.TypeSpec;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
+
+import xyz.rasp.laiquendi.processor.types.Types;
 
 /**
  * Created by twiceYuan on 2017/3/21.
@@ -74,7 +70,7 @@ public class ComponentBuilder {
         if (mSuperClass != null) {
             builder.superclass(TypeName.get(mSuperClass));
         } else {
-            builder.superclass(FrameLayout.class);
+            builder.superclass(Types.FRAME_LAYOUT);
         }
 
         builder.addModifiers(Modifier.PUBLIC, Modifier.FINAL);
@@ -90,14 +86,12 @@ public class ComponentBuilder {
 
         // 初始化布局
         builder.addMethod(MethodSpec.methodBuilder(METHOD_INIT_LAYOUT)
-                .addParameter(Context.class, "context")
+                .addParameter(Types.CONTEXT, "context")
                 .addModifiers(Modifier.PRIVATE)
-                // .addCode("android.view.View view = android.view.LayoutInflater.from(context).inflate(" + mLayoutId + ", null, false);\n")
-                .addCode("android.view.LayoutInflater.from(context).inflate(" + mLayoutId + ", this, true);\n")
-                // .addCode("addView(this);\n")
+                .addStatement("android.view.LayoutInflater.from(context).inflate($L, this, true)", mLayoutId)
                 // 构造原始控制对象
-                .addCode(FILED_CONTROLLER + " = new " + mOriginClassName + "();\n")
-                .addCode(FILED_CONTROLLER + ".initView(this);\n")
+                .addStatement("$L = new $L()", FILED_CONTROLLER, mOriginClassName)
+                .addStatement("$L.initView(this)", FILED_CONTROLLER)
                 .build());
 
         return builder.build();
@@ -115,7 +109,7 @@ public class ComponentBuilder {
         builder.addMethod(MethodSpec.methodBuilder("get" + mElement.getSimpleName())
                 .addModifiers(Modifier.PUBLIC)
                 .returns(TypeName.get(mElement.asType()))
-                .addCode("return " + FILED_CONTROLLER + ";\n")
+                .addStatement("return " + FILED_CONTROLLER)
                 .build());
 
         // view 中直接获取原始控制对象
@@ -123,10 +117,10 @@ public class ComponentBuilder {
                 .addModifiers(Modifier.PUBLIC)
                 .addModifiers(Modifier.STATIC)
                 .returns(TypeName.get(mElement.asType()))
-                .addParameter(View.class, "view")
+                .addParameter(Types.VIEW, "view")
                 .addParameter(int.class, "id")
-                .addCode(mFinalClassName + " container = (" + mFinalClassName + ") view.findViewById(id);\n")
-                .addCode("return container.get" + mSimpleName + "();\n")
+                .addStatement("$L container = ($L) view.findViewById(id)", mFinalClassName, mFinalClassName)
+                .addStatement("return container.get$L()", mSimpleName)
                 .build());
 
         // activity 中获取原始控制对象
@@ -134,10 +128,10 @@ public class ComponentBuilder {
                 .addModifiers(Modifier.PUBLIC)
                 .addModifiers(Modifier.STATIC)
                 .returns(TypeName.get(mElement.asType()))
-                .addParameter(Activity.class, "activity")
+                .addParameter(Types.ACTIVITY, "activity")
                 .addParameter(int.class, "id")
-                .addCode(mFinalClassName + " container = (" + mFinalClassName + ") activity.findViewById(id);\n")
-                .addCode("return container.get" + mSimpleName + "();\n")
+                .addStatement("$L container = ($L) activity.findViewById(id)", mFinalClassName, mFinalClassName)
+                .addStatement("return container.get$L()", mSimpleName)
                 .build());
     }
 
@@ -146,26 +140,26 @@ public class ComponentBuilder {
      */
     private void buildConstructors(TypeSpec.Builder builder) {
         builder.addMethod(MethodSpec.constructorBuilder()
-                .addParameter(Context.class, "context")
-                .addCode("super(context);\n")
-                .addCode(METHOD_INIT_LAYOUT + "(context);\n")
+                .addParameter(Types.CONTEXT, "context")
+                .addStatement("super(context)")
+                .addStatement(METHOD_INIT_LAYOUT + "(context)")
                 .addModifiers(Modifier.PUBLIC)
                 .build());
 
         builder.addMethod(MethodSpec.constructorBuilder()
-                .addParameter(Context.class, "context")
-                .addParameter(AttributeSet.class, "attrs")
-                .addCode("super(context, attrs);\n")
-                .addCode(METHOD_INIT_LAYOUT + "(context);\n")
+                .addParameter(Types.CONTEXT, "context")
+                .addParameter(Types.ATTRIBUTE_SET, "attrs")
+                .addStatement("super(context, attrs)")
+                .addStatement(METHOD_INIT_LAYOUT + "(context)")
                 .addModifiers(Modifier.PUBLIC)
                 .build());
 
         builder.addMethod(MethodSpec.constructorBuilder()
-                .addParameter(Context.class, "context")
-                .addParameter(AttributeSet.class, "attrs")
+                .addParameter(Types.CONTEXT, "context")
+                .addParameter(Types.ATTRIBUTE_SET, "attrs")
                 .addParameter(int.class, "defStyle")
-                .addCode("super(context, attrs, defStyle);\n")
-                .addCode(METHOD_INIT_LAYOUT + "(context);\n")
+                .addStatement("super(context, attrs, defStyle)")
+                .addStatement(METHOD_INIT_LAYOUT + "(context)")
                 .addModifiers(Modifier.PUBLIC)
                 .build());
     }

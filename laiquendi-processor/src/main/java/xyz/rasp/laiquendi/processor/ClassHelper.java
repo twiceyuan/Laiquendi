@@ -5,17 +5,17 @@ package xyz.rasp.laiquendi.processor;
  * <p>
  * Class name util
  */
-class ClassName {
+class ClassHelper {
 
     private String mOriginPackage;
     private String mOriginSimpleName;
 
-    static ClassName create(String fullName) {
-        ClassName className = new ClassName();
+    static ClassHelper create(String fullName) {
+        ClassHelper classHelper = new ClassHelper();
         int lastPoint = fullName.lastIndexOf(".");
-        className.mOriginPackage = fullName.substring(0, lastPoint);
-        className.mOriginSimpleName = fullName.substring(lastPoint + 1);
-        return className;
+        classHelper.mOriginPackage = fullName.substring(0, lastPoint);
+        classHelper.mOriginSimpleName = fullName.substring(lastPoint + 1);
+        return classHelper;
     }
 
     String getPackage() {

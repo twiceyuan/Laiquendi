@@ -1,4 +1,4 @@
-package xyz.rasp.laiquendi.processor;
+package xyz.rasp.laiquendi.processor.types;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.type.MirroredTypeException;

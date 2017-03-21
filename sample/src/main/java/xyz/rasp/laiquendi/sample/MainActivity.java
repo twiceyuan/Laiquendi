@@ -9,6 +9,8 @@ public class MainActivity extends Activity {
 
     private Header header;
 
+    private StateLayout mStateLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -17,6 +19,8 @@ public class MainActivity extends Activity {
         // Inject
         header = HeaderView.get(this, R.id.header);
         header.attach(this);
+
+        mStateLayout = StateLayoutView.get(this, R.id.state);
     }
 
     @Override
@@ -28,9 +32,20 @@ public class MainActivity extends Activity {
         return true;
     }
 
+    private int seed = 0;
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         header.setTitle((String) item.getTitle());
+
+        seed++;
+
+        if (seed % 2 == 0) {
+            mStateLayout.showContent();
+        } else {
+            mStateLayout.showEmpty();
+        }
+
         return true;
     }
 }

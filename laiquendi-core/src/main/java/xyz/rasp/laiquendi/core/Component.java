@@ -1,7 +1,5 @@
 package xyz.rasp.laiquendi.core;
 
-import android.view.View;
-
 /**
  * Created by twiceYuan on 2017/3/20.
  *
@@ -9,5 +7,5 @@ import android.view.View;
  */
 public interface Component {
 
-    void initView(View rootView);
+    void initView(android.view.View rootView);
 }
