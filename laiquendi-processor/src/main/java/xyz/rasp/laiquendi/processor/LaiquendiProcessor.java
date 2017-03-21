@@ -1,6 +1,7 @@
 package xyz.rasp.laiquendi.processor;
 
 import com.google.auto.service.AutoService;
+import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.TypeSpec;
 
@@ -17,9 +18,10 @@ import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Name;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.util.Elements;
 
-import xyz.rasp.laiquendi.core.LaiquendiLayoutId;
 import xyz.rasp.laiquendi.processor.types.TypeUtil;
+import xyz.rasp.laiquendi.processor.types.Types;
 
 /**
  * Created by twiceYuan on 2017/3/20.
@@ -30,22 +32,24 @@ import xyz.rasp.laiquendi.processor.types.TypeUtil;
 @AutoService(Processor.class)
 public class LaiquendiProcessor extends AbstractProcessor {
 
-    private Filer filer;
+    private Filer                       filer;
+    private Elements                    elementUtils;
+    private javax.lang.model.util.Types typeUtils;
 
     @Override
     public synchronized void init(ProcessingEnvironment processingEnvironment) {
         super.init(processingEnvironment);
         filer = processingEnvironment.getFiler();
+        elementUtils = processingEnvironment.getElementUtils();
+        typeUtils = processingEnvironment.getTypeUtils();
     }
 
     @Override
     public boolean process(Set<? extends TypeElement> set, RoundEnvironment roundEnvironment) {
-
-        Set<? extends Element> laiquendi = roundEnvironment
-                .getElementsAnnotatedWith(LaiquendiLayoutId.class);
+        Set<? extends Element> laiquendi = roundEnvironment.getElementsAnnotatedWith(elementUtils.getTypeElement(Types.ANNOTATION_LAYOUT_ID.toString()));
         for (Element element : laiquendi) {
-            int layoutId = element.getAnnotation(LaiquendiLayoutId.class).value();
-            Class parentClass = TypeUtil.getSuperClass(element);
+            int layoutId = (int) TypeUtil.getAnnotationSingleValue(Types.ANNOTATION_LAYOUT_ID, element);
+            ClassName parentClass = TypeUtil.getSuperClass(element);
             Name qualifiedName = ((TypeElement) element).getQualifiedName();
             buildViewClass(element, layoutId, qualifiedName.toString(), parentClass);
         }
@@ -53,7 +57,7 @@ public class LaiquendiProcessor extends AbstractProcessor {
         return true;
     }
 
-    private void buildViewClass(Element element, int layoutId, String originViewName, Class superClass) {
+    private void buildViewClass(Element element, int layoutId, String originViewName, ClassName superClass) {
 
         ClassHelper classHelper = ClassHelper.create(originViewName);
 
@@ -65,7 +69,9 @@ public class LaiquendiProcessor extends AbstractProcessor {
                 .simpleName(classHelper.getSimpleName())
                 .build();
 
-        JavaFile javaFile = JavaFile.builder(classHelper.getPackage(), generatedClassName).build();
+        JavaFile javaFile = JavaFile.builder(classHelper.getPackage(), generatedClassName)
+                .addFileComment("本文件由 Laiquendi 生成，请勿修改")
+                .build();
 
         try {
             javaFile.writeTo(filer);
@@ -77,7 +83,7 @@ public class LaiquendiProcessor extends AbstractProcessor {
     @Override
     public Set<String> getSupportedAnnotationTypes() {
         Set<String> types = new HashSet<>();
-        types.add(xyz.rasp.laiquendi.core.LaiquendiLayoutId.class.getCanonicalName());
+        types.add(Types.ANNOTATION_LAYOUT_ID.toString());
         return types;
     }
 

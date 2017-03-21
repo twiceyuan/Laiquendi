@@ -1,9 +1,12 @@
 package xyz.rasp.laiquendi.processor.types;
 
-import javax.lang.model.element.Element;
-import javax.lang.model.type.MirroredTypeException;
+import com.squareup.javapoet.ClassName;
 
-import xyz.rasp.laiquendi.core.SuperClass;
+import java.util.List;
+
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.Element;
+import javax.lang.model.type.DeclaredType;
 
 /**
  * Created by twiceYuan on 2017/3/21.
@@ -12,18 +15,34 @@ import xyz.rasp.laiquendi.core.SuperClass;
  */
 public class TypeUtil {
 
-    public static Class getSuperClass(Element element) {
-        SuperClass superClass = element.getAnnotation(SuperClass.class);
-        try {
-            return superClass.value();
-        } catch (MirroredTypeException e) {
-            try {
-                return Class.forName(e.getTypeMirror().toString());
-            } catch (ClassNotFoundException e1) {
-                return null;
+    public static ClassName getSuperClass(Element element) {
+        List<? extends AnnotationMirror> annotationMirrors = element.getAnnotationMirrors();
+        for (AnnotationMirror annotationMirror : annotationMirrors) {
+            if (annotationMirror.getAnnotationType().toString().equals(Types.ANNOTATION_SUPER_CLASS.toString())) {
+                try {
+                    return ClassName.bestGuess(annotationMirror
+                            .getElementValues()
+                            .values()
+                            .iterator()
+                            .next()
+                            .getValue()
+                            .toString());
+                } catch (Exception e) {
+                    return null;
+                }
             }
-        } catch (Exception e) {
-            return null;
         }
+        return null;
+    }
+
+    public static Object getAnnotationSingleValue(ClassName annotationClass, Element element) {
+        List<? extends AnnotationMirror> annotationMirrors = element.getAnnotationMirrors();
+        for (AnnotationMirror annotationMirror : annotationMirrors) {
+            DeclaredType annotationType = annotationMirror.getAnnotationType();
+            if (annotationType.toString().equals(annotationClass.toString())) {
+                return annotationMirror.getElementValues().values().iterator().next().getValue();
+            }
+        }
+        return null;
     }
 }

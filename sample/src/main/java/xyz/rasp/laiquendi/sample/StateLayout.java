@@ -7,7 +7,7 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import xyz.rasp.laiquendi.core.Component;
-import xyz.rasp.laiquendi.core.LaiquendiLayoutId;
+import xyz.rasp.laiquendi.core.ComponentId;
 import xyz.rasp.laiquendi.core.SuperClass;
 
 /**
@@ -17,7 +17,7 @@ import xyz.rasp.laiquendi.core.SuperClass;
  */
 @SuppressWarnings("WeakerAccess")
 @SuperClass(FrameLayout.class)
-@LaiquendiLayoutId(R.layout.component_state)
+@ComponentId(R.layout.component_state)
 public class StateLayout implements Component {
 
     @BindView(R.id.tv_message) TextView mTvMessage;

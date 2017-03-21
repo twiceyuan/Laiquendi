@@ -1,5 +1,6 @@
 package xyz.rasp.laiquendi.processor;
 
+import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeName;
@@ -22,12 +23,12 @@ public class ComponentBuilder {
     private static final String FILED_CONTROLLER      = "mController";
     private static final String GENERATE_CLASS_SUFFIX = "View";
 
-    private String  mOriginClassName;
-    private String  mFinalClassName;
-    private Element mElement;
-    private int     mLayoutId;
-    private String  mSimpleName;
-    private Class   mSuperClass;
+    private String    mOriginClassName;
+    private String    mFinalClassName;
+    private Element   mElement;
+    private int       mLayoutId;
+    private String    mSimpleName;
+    private ClassName mSuperClass;
 
     private ComponentBuilder() {
     }
@@ -57,7 +58,7 @@ public class ComponentBuilder {
         return this;
     }
 
-    public ComponentBuilder superClass(Class superClass) {
+    public ComponentBuilder superClass(ClassName superClass) {
         mSuperClass = superClass;
         return this;
     }
@@ -68,7 +69,7 @@ public class ComponentBuilder {
         // 基本属性
 
         if (mSuperClass != null) {
-            builder.superclass(TypeName.get(mSuperClass));
+            builder.superclass(mSuperClass);
         } else {
             builder.superclass(Types.FRAME_LAYOUT);
         }

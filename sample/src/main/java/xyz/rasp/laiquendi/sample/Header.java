@@ -7,7 +7,7 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import xyz.rasp.laiquendi.core.Component;
-import xyz.rasp.laiquendi.core.LaiquendiLayoutId;
+import xyz.rasp.laiquendi.core.ComponentId;
 
 /**
  * Created by twiceYuan on 2017/3/20.
@@ -15,7 +15,7 @@ import xyz.rasp.laiquendi.core.LaiquendiLayoutId;
  * he he
  */
 @SuppressWarnings("WeakerAccess")
-@LaiquendiLayoutId(R.layout.header)
+@ComponentId(R.layout.header)
 public class Header implements Component {
 
     @BindView(R.id.tv_back)   TextView mTvBack;

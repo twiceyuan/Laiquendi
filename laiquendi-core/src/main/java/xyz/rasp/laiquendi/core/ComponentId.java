@@ -14,6 +14,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.SOURCE)
 @Documented
-public @interface LaiquendiLayoutId {
+public @interface ComponentId {
     int value();
 }
