@@ -88,13 +88,25 @@ public class ComponentBuilder {
         // 初始化布局
         builder.addMethod(MethodSpec.methodBuilder(METHOD_INIT_LAYOUT)
                 .addParameter(Types.CONTEXT, "context")
+                .addParameter(Types.ATTRIBUTE_SET, "attrs")
                 .addModifiers(Modifier.PRIVATE)
-                .addStatement("$T.from(context).inflate($L, this, true)",
-                        Types.LAYOUT_INFLATER,
-                        mLayoutId)
+                .addStatement("$T attributes = context.obtainStyledAttributes(attrs, R.styleable.Components)", Types.TYPED_ARRAY)
+                .addStatement("String params = attributes.getString(R.styleable.Components_params)")
+                .addStatement("attributes.recycle()")
+                .addStatement("$T.from(context).inflate($L, this, true)", Types.LAYOUT_INFLATER, mLayoutId)
                 // 构造原始控制对象
-                .addStatement("$L = new $L()", FILED_CONTROLLER, mOriginClassName)
+                .addStatement("$L = new $T()", FILED_CONTROLLER, ClassName.bestGuess(mOriginClassName))
                 .addStatement("$L.initView(this)", FILED_CONTROLLER)
+                // 初始化参数
+                .beginControlFlow("if (params != null && $L instanceof $T)", FILED_CONTROLLER, Types.ANNOTATION_PARAM_COMPONENT)
+                .addStatement("onLoadParams(params)")
+                .endControlFlow()
+                .build());
+
+        // 传递参数
+        builder.addMethod(MethodSpec.methodBuilder("onLoadParams")
+                .addParameter(String.class, "params")
+                .addStatement("(($T) $L).onLoadParams(params)", Types.ANNOTATION_PARAM_COMPONENT, FILED_CONTROLLER)
                 .build());
 
         return builder.build();
@@ -145,7 +157,7 @@ public class ComponentBuilder {
         builder.addMethod(MethodSpec.constructorBuilder()
                 .addParameter(Types.CONTEXT, "context")
                 .addStatement("super(context)")
-                .addStatement(METHOD_INIT_LAYOUT + "(context)")
+                .addStatement(METHOD_INIT_LAYOUT + "(context, null)")
                 .addModifiers(Modifier.PUBLIC)
                 .build());
 
@@ -153,7 +165,7 @@ public class ComponentBuilder {
                 .addParameter(Types.CONTEXT, "context")
                 .addParameter(Types.ATTRIBUTE_SET, "attrs")
                 .addStatement("super(context, attrs)")
-                .addStatement(METHOD_INIT_LAYOUT + "(context)")
+                .addStatement(METHOD_INIT_LAYOUT + "(context, attrs)")
                 .addModifiers(Modifier.PUBLIC)
                 .build());
 
@@ -162,7 +174,7 @@ public class ComponentBuilder {
                 .addParameter(Types.ATTRIBUTE_SET, "attrs")
                 .addParameter(int.class, "defStyle")
                 .addStatement("super(context, attrs, defStyle)")
-                .addStatement(METHOD_INIT_LAYOUT + "(context)")
+                .addStatement(METHOD_INIT_LAYOUT + "(context, attrs)")
                 .addModifiers(Modifier.PUBLIC)
                 .build());
     }

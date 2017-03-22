@@ -6,8 +6,8 @@ import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import xyz.rasp.laiquendi.core.Component;
 import xyz.rasp.laiquendi.core.ComponentId;
+import xyz.rasp.laiquendi.core.ParamsComponent;
 
 /**
  * Created by twiceYuan on 2017/3/20.
@@ -16,7 +16,7 @@ import xyz.rasp.laiquendi.core.ComponentId;
  */
 @SuppressWarnings("WeakerAccess")
 @ComponentId(R.layout.header)
-public class Header implements Component {
+public class Header implements ParamsComponent {
 
     @BindView(R.id.tv_back)   TextView mTvBack;
     @BindView(R.id.tv_header) TextView mTvHeader;
@@ -35,5 +35,10 @@ public class Header implements Component {
 
     public void setTitle(String title) {
         mTvHeader.setText(title);
+    }
+
+    @Override
+    public void onLoadParams(String params) {
+        mTvHeader.setText(params);
     }
 }
