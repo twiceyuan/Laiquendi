@@ -7,8 +7,8 @@ import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import xyz.rasp.laiquendi.core.Component;
 import xyz.rasp.laiquendi.core.ComponentId;
+import xyz.rasp.laiquendi.core.ParamsComponent;
 import xyz.rasp.laiquendi.core.SuperClass;
 
 /**
@@ -19,7 +19,7 @@ import xyz.rasp.laiquendi.core.SuperClass;
 @SuppressWarnings("WeakerAccess")
 @SuperClass(LinearLayout.class)
 @ComponentId(R.layout.component_state)
-public class StateLayout implements Component {
+public class StateLayout implements ParamsComponent {
 
     @BindView(R.id.tv_message)   TextView     mTvMessage;
     @BindView(R.id.state_parent) LinearLayout mStateParent;
@@ -41,5 +41,15 @@ public class StateLayout implements Component {
 
     public void showEmpty() {
         mStateParent.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onLoadParams(String params) {
+        if (params.equals("empty")) {
+            showEmpty();
+        }
+        if (params.equals("content")) {
+            showContent();
+        }
     }
 }

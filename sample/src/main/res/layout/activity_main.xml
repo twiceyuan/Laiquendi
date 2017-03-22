@@ -17,7 +17,8 @@
     <xyz.rasp.laiquendi.sample.StateLayoutView
         android:id="@+id/state"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:params="empty">
 
         <TextView
             android:layout_width="wrap_content"
