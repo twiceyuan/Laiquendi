@@ -7,9 +7,8 @@ import android.view.MenuItem;
 
 public class MainActivity extends Activity {
 
-    private Header header;
-
-    private StateLayout mStateLayout;
+    private Header      header;
+    private StateLayout state;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,9 +17,19 @@ public class MainActivity extends Activity {
 
         // Inject
         header = HeaderView.get(this, R.id.header);
+        state = StateLayoutView.get(this, R.id.state);
+
         header.attach(this);
 
-        mStateLayout = StateLayoutView.get(this, R.id.state);
+        final int[] seed = {0};
+        header.mTvHeader.setOnClickListener(v -> {
+            seed[0]++;
+            if (seed[0] % 2 == 0) {
+                state.showContent();
+            } else {
+                state.showEmpty();
+            }
+        });
     }
 
     @Override
@@ -32,20 +41,9 @@ public class MainActivity extends Activity {
         return true;
     }
 
-    private int seed = 0;
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         header.setTitle((String) item.getTitle());
-
-        seed++;
-
-        if (seed % 2 == 0) {
-            mStateLayout.showContent();
-        } else {
-            mStateLayout.showEmpty();
-        }
-
         return true;
     }
 }

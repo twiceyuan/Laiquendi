@@ -1,7 +1,8 @@
 package xyz.rasp.laiquendi.sample;
 
+import android.view.Gravity;
 import android.view.View;
-import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import butterknife.BindView;
@@ -16,27 +17,29 @@ import xyz.rasp.laiquendi.core.SuperClass;
  * State Layout
  */
 @SuppressWarnings("WeakerAccess")
-@SuperClass(FrameLayout.class)
+@SuperClass(LinearLayout.class)
 @ComponentId(R.layout.component_state)
 public class StateLayout implements Component {
 
-    @BindView(R.id.tv_message) TextView mTvMessage;
-
-    private Runnable showContent;
-    private Runnable showEmpty;
+    @BindView(R.id.tv_message)   TextView     mTvMessage;
+    @BindView(R.id.state_parent) LinearLayout mStateParent;
 
     @Override
     public void initView(View rootView) {
         ButterKnife.bind(this, rootView);
-        showContent = () -> rootView.setVisibility(View.GONE);
-        showEmpty = () -> rootView.setVisibility(View.VISIBLE);
+
+        if (rootView instanceof LinearLayout) {
+            ((LinearLayout) rootView).setGravity(Gravity.CENTER);
+        }
+
+        mStateParent.setVisibility(View.GONE);
     }
 
     public void showContent() {
-        showContent.run();
+        mStateParent.setVisibility(View.GONE);
     }
 
     public void showEmpty() {
-        showEmpty.run();
+        mStateParent.setVisibility(View.VISIBLE);
     }
 }

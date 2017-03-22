@@ -15,6 +15,9 @@ import javax.lang.model.type.DeclaredType;
  */
 public class TypeUtil {
 
+    /**
+     * 根据 SuperClass 注解获取值
+     */
     public static ClassName getSuperClass(Element element) {
         List<? extends AnnotationMirror> annotationMirrors = element.getAnnotationMirrors();
         for (AnnotationMirror annotationMirror : annotationMirrors) {
@@ -35,6 +38,13 @@ public class TypeUtil {
         return null;
     }
 
+    /**
+     * 根据注解 ClassName 和 Element（被注解元素）来获取注解值。仅在单注解值有效
+     *
+     * @param annotationClass 注解类的 ClassName
+     * @param element         被注解的元素
+     * @return 注解的值
+     */
     public static Object getAnnotationSingleValue(ClassName annotationClass, Element element) {
         List<? extends AnnotationMirror> annotationMirrors = element.getAnnotationMirrors();
         for (AnnotationMirror annotationMirror : annotationMirrors) {

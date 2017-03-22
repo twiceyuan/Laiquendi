@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Laiquendi</string>
+    <string name="mock_content">Mock Content</string>
 </resources>

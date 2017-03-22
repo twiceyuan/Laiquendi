@@ -59,17 +59,17 @@ public class LaiquendiProcessor extends AbstractProcessor {
 
     private void buildViewClass(Element element, int layoutId, String originViewName, ClassName superClass) {
 
-        ClassHelper classHelper = ClassHelper.create(originViewName);
+        ClassName className = ClassName.bestGuess(originViewName);
 
         TypeSpec generatedClassName = ComponentBuilder.create()
                 .layoutId(layoutId)
                 .element(element)
                 .superClass(superClass)
                 .fullName(originViewName)
-                .simpleName(classHelper.getSimpleName())
+                .simpleName(className.simpleName())
                 .build();
 
-        JavaFile javaFile = JavaFile.builder(classHelper.getPackage(), generatedClassName)
+        JavaFile javaFile = JavaFile.builder(className.packageName(), generatedClassName)
                 .addFileComment("本文件由 Laiquendi 生成，请勿修改")
                 .build();
 

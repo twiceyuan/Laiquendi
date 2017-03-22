@@ -89,7 +89,9 @@ public class ComponentBuilder {
         builder.addMethod(MethodSpec.methodBuilder(METHOD_INIT_LAYOUT)
                 .addParameter(Types.CONTEXT, "context")
                 .addModifiers(Modifier.PRIVATE)
-                .addStatement("android.view.LayoutInflater.from(context).inflate($L, this, true)", mLayoutId)
+                .addStatement("$T.from(context).inflate($L, this, true)",
+                        Types.LAYOUT_INFLATER,
+                        mLayoutId)
                 // 构造原始控制对象
                 .addStatement("$L = new $L()", FILED_CONTROLLER, mOriginClassName)
                 .addStatement("$L.initView(this)", FILED_CONTROLLER)
