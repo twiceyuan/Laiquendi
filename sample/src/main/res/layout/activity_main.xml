@@ -12,7 +12,7 @@
         android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:params="Dynamic Title!"/>
+        app:params="title: Title, back: 返回, menu:选项, headSize: 18"/>
 
     <xyz.rasp.laiquendi.sample.StateLayoutView
         android:id="@+id/state"

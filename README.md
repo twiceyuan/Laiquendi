@@ -43,7 +43,12 @@ public class Header implements Component {
     android:layout_height="wrap_content"/>
 ```
 
+效果图(app:params 为自定义参数，可继承 ParamsComponent 接口来传递一个字符串参数)
+
+![Sample](art/sample.png)
+
 在调用的 Activity 或者 View 中直接调用 HeaderView 来获取模块对象即可
+
 ```java
 Header header = HeaderView.get(this, R.id.header);
 ```

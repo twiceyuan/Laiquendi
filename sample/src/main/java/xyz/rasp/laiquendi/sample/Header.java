@@ -7,6 +7,7 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import xyz.rasp.laiquendi.core.ComponentId;
+import xyz.rasp.laiquendi.core.Params;
 import xyz.rasp.laiquendi.core.ParamsComponent;
 
 /**
@@ -39,6 +40,10 @@ public class Header implements ParamsComponent {
 
     @Override
     public void onLoadParams(String params) {
-        mTvHeader.setText(params);
+        Params parsed = Params.parse(params);
+        mTvHeader.setText(parsed.getString("title"));
+        mTvBack.setText(parsed.getString("back"));
+        mTvMenu.setText(parsed.getString("menu"));
+        mTvHeader.setTextSize(parsed.getInt("headSize"));
     }
 }

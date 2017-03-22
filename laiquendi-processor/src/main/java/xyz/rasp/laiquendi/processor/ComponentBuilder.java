@@ -87,6 +87,7 @@ public class ComponentBuilder {
 
         // 初始化布局
         builder.addMethod(MethodSpec.methodBuilder(METHOD_INIT_LAYOUT)
+                .addAnnotation(Types.RESOURCE_TYPE_WARNING)
                 .addParameter(Types.CONTEXT, "context")
                 .addParameter(Types.ATTRIBUTE_SET, "attrs")
                 .addModifiers(Modifier.PRIVATE)

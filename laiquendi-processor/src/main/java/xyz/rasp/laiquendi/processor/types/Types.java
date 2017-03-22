@@ -1,6 +1,9 @@
 package xyz.rasp.laiquendi.processor.types;
 
+import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
+
+import java.lang.annotation.Annotation;
 
 /**
  * Created by twiceYuan on 2017/3/21.
@@ -22,4 +25,15 @@ public class Types {
     public static final ClassName LAYOUT_INFLATER = ClassName.get("android.view", "LayoutInflater");
     public static final ClassName TYPED_ARRAY     = ClassName.get("android.content.res", "TypedArray");
 
+    public static final AnnotationSpec RESOURCE_TYPE_WARNING = AnnotationSpec.get(new SuppressWarnings() {
+        @Override
+        public Class<? extends Annotation> annotationType() {
+            return SuppressWarnings.class;
+        }
+
+        @Override
+        public String[] value() {
+            return new String[]{"ResourceType"};
+        }
+    });
 }
