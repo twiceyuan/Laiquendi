@@ -9,9 +9,17 @@ import com.facebook.stetho.Stetho;
  */
 
 public class App extends Application {
+
+    static App sApp;
+
     @Override
     public void onCreate() {
         super.onCreate();
         Stetho.initializeWithDefaults(this);
+        sApp = this;
+    }
+
+    public static App getApp() {
+        return sApp;
     }
 }

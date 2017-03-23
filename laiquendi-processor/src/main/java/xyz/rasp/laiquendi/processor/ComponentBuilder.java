@@ -9,6 +9,7 @@ import com.squareup.javapoet.TypeSpec;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
 
+import xyz.rasp.laiquendi.processor.types.Constants;
 import xyz.rasp.laiquendi.processor.types.Types;
 
 /**
@@ -64,53 +65,61 @@ public class ComponentBuilder {
     }
 
     public TypeSpec build() {
-        TypeSpec.Builder builder = TypeSpec.classBuilder(mFinalClassName);
+        TypeSpec.Builder classBuilder = TypeSpec.classBuilder(mFinalClassName);
 
         // 基本属性
 
         if (mSuperClass != null) {
-            builder.superclass(mSuperClass);
+            classBuilder.superclass(mSuperClass);
         } else {
-            builder.superclass(Types.FRAME_LAYOUT);
+            classBuilder.superclass(Types.FRAME_LAYOUT);
         }
 
-        builder.addModifiers(Modifier.PUBLIC, Modifier.FINAL);
+        classBuilder.addModifiers(Modifier.PUBLIC, Modifier.FINAL);
 
         // 成员
-        buildFields(builder);
+        buildFields(classBuilder);
 
         // 构造器
-        buildConstructors(builder);
+        buildConstructors(classBuilder);
 
         // 内部原始类获取器
-        buildGetter(builder);
+        buildGetter(classBuilder);
 
         // 初始化布局
-        builder.addMethod(MethodSpec.methodBuilder(METHOD_INIT_LAYOUT)
+        MethodSpec.Builder initLayoutBuilder = MethodSpec.methodBuilder(METHOD_INIT_LAYOUT)
                 .addAnnotation(Types.RESOURCE_TYPE_WARNING)
                 .addParameter(Types.CONTEXT, "context")
                 .addParameter(Types.ATTRIBUTE_SET, "attrs")
                 .addModifiers(Modifier.PRIVATE)
                 .addStatement("$T attributes = context.obtainStyledAttributes(attrs, R.styleable.Components)", Types.TYPED_ARRAY)
-                .addStatement("String params = attributes.getString(R.styleable.Components_params)")
-                .addStatement("attributes.recycle()")
-                .addStatement("$T.from(context).inflate($L, this, true)", Types.LAYOUT_INFLATER, mLayoutId)
-                // 构造原始控制对象
-                .addStatement("$L = new $T()", FILED_CONTROLLER, ClassName.bestGuess(mOriginClassName))
-                .addStatement("$L.initView(this)", FILED_CONTROLLER)
-                // 初始化参数
-                .beginControlFlow("if (params != null && $L instanceof $T)", FILED_CONTROLLER, Types.ANNOTATION_PARAM_COMPONENT)
-                .addStatement("onLoadParams(params)")
+                .addStatement("String params = attributes.getString($T.styleable.Components_params)", Types.R)
+                .addStatement("attributes.recycle()");
+
+        // 判断是否存在布局并且填充
+        if (mLayoutId != Constants.NO_ID) {
+            initLayoutBuilder.addStatement("$T.from(context).inflate($L, this, true)", Types.LAYOUT_INFLATER, mLayoutId);
+        }
+
+        // 构造原始控制对象
+        initLayoutBuilder.addStatement("$L = new $T()", FILED_CONTROLLER, ClassName.bestGuess(mOriginClassName))
+                .beginControlFlow("if ($L instanceof $T)", FILED_CONTROLLER, Types.INTERFACE_COMPONENT_CREATE)
+                .addStatement("(($T) $L).$L(this)",
+                        Types.INTERFACE_COMPONENT_CREATE,
+                        FILED_CONTROLLER,
+                        Types.INTERFACE_COMPONENT_CREATE_METHOD)
                 .endControlFlow()
-                .build());
+                // 初始化参数
+                .beginControlFlow("if (params != null && $L instanceof $T)", FILED_CONTROLLER, Types.INTERFACE_PARAMS_LOAD)
+                .addStatement("(($T) $L).$L(params)",
+                        Types.INTERFACE_PARAMS_LOAD,
+                        FILED_CONTROLLER,
+                        Types.INTERFACE_PARAMS_LOAD_METHOD)
+                .endControlFlow();
 
-        // 传递参数
-        builder.addMethod(MethodSpec.methodBuilder("onLoadParams")
-                .addParameter(String.class, "params")
-                .addStatement("(($T) $L).onLoadParams(params)", Types.ANNOTATION_PARAM_COMPONENT, FILED_CONTROLLER)
-                .build());
+        classBuilder.addMethod(initLayoutBuilder.build());
 
-        return builder.build();
+        return classBuilder.build();
     }
 
     private void buildFields(TypeSpec.Builder builder) {
@@ -166,15 +175,6 @@ public class ComponentBuilder {
                 .addParameter(Types.CONTEXT, "context")
                 .addParameter(Types.ATTRIBUTE_SET, "attrs")
                 .addStatement("super(context, attrs)")
-                .addStatement(METHOD_INIT_LAYOUT + "(context, attrs)")
-                .addModifiers(Modifier.PUBLIC)
-                .build());
-
-        builder.addMethod(MethodSpec.constructorBuilder()
-                .addParameter(Types.CONTEXT, "context")
-                .addParameter(Types.ATTRIBUTE_SET, "attrs")
-                .addParameter(int.class, "defStyle")
-                .addStatement("super(context, attrs, defStyle)")
                 .addStatement(METHOD_INIT_LAYOUT + "(context, attrs)")
                 .addModifiers(Modifier.PUBLIC)
                 .build());

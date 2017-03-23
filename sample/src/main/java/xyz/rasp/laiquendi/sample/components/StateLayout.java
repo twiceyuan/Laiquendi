@@ -1,15 +1,18 @@
-package xyz.rasp.laiquendi.sample;
+package xyz.rasp.laiquendi.sample.components;
 
 import android.view.Gravity;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import xyz.rasp.laiquendi.core.ComponentId;
-import xyz.rasp.laiquendi.core.ParamsComponent;
+import xyz.rasp.laiquendi.core.Component;
+import xyz.rasp.laiquendi.core.Params;
+import xyz.rasp.laiquendi.core.ParamsLoadListener;
 import xyz.rasp.laiquendi.core.SuperClass;
+import xyz.rasp.laiquendi.sample.R;
 
 /**
  * Created by twiceYuan on 2017/3/21.
@@ -18,14 +21,15 @@ import xyz.rasp.laiquendi.core.SuperClass;
  */
 @SuppressWarnings("WeakerAccess")
 @SuperClass(LinearLayout.class)
-@ComponentId(R.layout.component_state)
-public class StateLayout implements ParamsComponent {
+@Component(R.layout.component_state)
+public class StateLayout implements ParamsLoadListener {
 
     @BindView(R.id.tv_message)   TextView     mTvMessage;
     @BindView(R.id.state_parent) LinearLayout mStateParent;
+    @BindView(R.id.iv_empty)     ImageView    mEmptyImage;
 
     @Override
-    public void initView(View rootView) {
+    public void onComponentCreate(View rootView) {
         ButterKnife.bind(this, rootView);
 
         if (rootView instanceof LinearLayout) {
@@ -45,11 +49,15 @@ public class StateLayout implements ParamsComponent {
 
     @Override
     public void onLoadParams(String params) {
-        if (params.equals("empty")) {
+        Params parsed = Params.parse(params);
+        String status = parsed.getString("status", "");
+        if (status.equals("empty")) {
             showEmpty();
         }
-        if (params.equals("content")) {
+        if (status.equals("content")) {
             showContent();
         }
+        String emptyString = parsed.getString("emptyString", "Empty");
+        mTvMessage.setText(emptyString);
     }
 }

@@ -20,6 +20,7 @@ import javax.lang.model.element.Name;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
 
+import xyz.rasp.laiquendi.processor.types.Constants;
 import xyz.rasp.laiquendi.processor.types.TypeUtil;
 import xyz.rasp.laiquendi.processor.types.Types;
 
@@ -46,9 +47,14 @@ public class LaiquendiProcessor extends AbstractProcessor {
 
     @Override
     public boolean process(Set<? extends TypeElement> set, RoundEnvironment roundEnvironment) {
-        Set<? extends Element> laiquendi = roundEnvironment.getElementsAnnotatedWith(elementUtils.getTypeElement(Types.ANNOTATION_LAYOUT_ID.toString()));
+        Set<? extends Element> laiquendi = roundEnvironment.getElementsAnnotatedWith(elementUtils.getTypeElement(Types.ANNOTATION_COMPONENT.toString()));
         for (Element element : laiquendi) {
-            int layoutId = (int) TypeUtil.getAnnotationSingleValue(Types.ANNOTATION_LAYOUT_ID, element);
+            int layoutId = Constants.NO_ID;
+            try {
+                layoutId = (int) TypeUtil.getAnnotationSingleValue(Types.ANNOTATION_COMPONENT, element);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             ClassName parentClass = TypeUtil.getSuperClass(element);
             Name qualifiedName = ((TypeElement) element).getQualifiedName();
             buildViewClass(element, layoutId, qualifiedName.toString(), parentClass);
@@ -83,7 +89,7 @@ public class LaiquendiProcessor extends AbstractProcessor {
     @Override
     public Set<String> getSupportedAnnotationTypes() {
         Set<String> types = new HashSet<>();
-        types.add(Types.ANNOTATION_LAYOUT_ID.toString());
+        types.add(Types.ANNOTATION_COMPONENT.toString());
         return types;
     }
 

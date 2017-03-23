@@ -1,4 +1,4 @@
-package xyz.rasp.laiquendi.sample;
+package xyz.rasp.laiquendi.sample.components;
 
 import android.app.Activity;
 import android.view.View;
@@ -6,9 +6,10 @@ import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import xyz.rasp.laiquendi.core.ComponentId;
+import xyz.rasp.laiquendi.core.Component;
+import xyz.rasp.laiquendi.core.ParamsLoadListener;
 import xyz.rasp.laiquendi.core.Params;
-import xyz.rasp.laiquendi.core.ParamsComponent;
+import xyz.rasp.laiquendi.sample.R;
 
 /**
  * Created by twiceYuan on 2017/3/20.
@@ -16,15 +17,15 @@ import xyz.rasp.laiquendi.core.ParamsComponent;
  * he he
  */
 @SuppressWarnings("WeakerAccess")
-@ComponentId(R.layout.header)
-public class Header implements ParamsComponent {
+@Component(R.layout.header)
+public class Header implements ParamsLoadListener {
 
-    @BindView(R.id.tv_back)   TextView mTvBack;
-    @BindView(R.id.tv_header) TextView mTvHeader;
-    @BindView(R.id.tv_menu)   TextView mTvMenu;
+    @BindView(R.id.tv_back)          TextView mTvBack;
+    @BindView(R.id.tv_header) public TextView mTvHeader;
+    @BindView(R.id.tv_menu)          TextView mTvMenu;
 
     @Override
-    public void initView(View rootView) {
+    public void onComponentCreate(View rootView) {
         ButterKnife.bind(this, rootView);
     }
 
@@ -44,6 +45,6 @@ public class Header implements ParamsComponent {
         mTvHeader.setText(parsed.getString("title"));
         mTvBack.setText(parsed.getString("back"));
         mTvMenu.setText(parsed.getString("menu"));
-        mTvHeader.setTextSize(parsed.getInt("headSize"));
+        mTvHeader.setTextSize(parsed.getInt("headSize", 14));
     }
 }

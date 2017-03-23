@@ -8,23 +8,36 @@
     android:orientation="vertical"
     tools:context="xyz.rasp.laiquendi.sample.MainActivity">
 
-    <xyz.rasp.laiquendi.sample.HeaderView
+    <xyz.rasp.laiquendi.sample.components.HeaderView
         android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:params="title: Title, back: 返回, menu:选项, headSize: 18"/>
+        app:params="
+        title: Hello Title,
+        headSize: 19,
+        back: Back,
+        menu: Menu"/>
 
-    <xyz.rasp.laiquendi.sample.StateLayoutView
-        android:id="@+id/state"
+    <xyz.rasp.laiquendi.sample.components.PrimaryRefreshLayoutView
+        android:id="@+id/refresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:params="empty">
+        android:layout_height="wrap_content">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/mock_content"/>
+        <xyz.rasp.laiquendi.sample.components.StateLayoutView
+            android:id="@+id/state"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:params="
+        status: empty,
+        emptyString: No Data">
 
-    </xyz.rasp.laiquendi.sample.StateLayoutView>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/mock_content"/>
+
+        </xyz.rasp.laiquendi.sample.components.StateLayoutView>
+
+    </xyz.rasp.laiquendi.sample.components.PrimaryRefreshLayoutView>
 
 </LinearLayout>
