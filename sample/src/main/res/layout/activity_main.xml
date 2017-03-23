@@ -27,14 +27,18 @@
             android:id="@+id/state"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:params="
-        status: empty,
-        emptyString: No Data">
+            app:params="status: content, emptyString: No Data">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/mock_content"/>
+            <android.support.v4.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <xyz.rasp.laiquendi.sample.components.MockContentView
+                    android:id="@+id/mock_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+            </android.support.v4.widget.NestedScrollView>
 
         </xyz.rasp.laiquendi.sample.components.StateLayoutView>
 
