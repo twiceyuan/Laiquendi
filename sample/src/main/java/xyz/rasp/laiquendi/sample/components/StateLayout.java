@@ -1,6 +1,5 @@
 package xyz.rasp.laiquendi.sample.components;
 
-import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -31,9 +30,6 @@ public class StateLayout implements ParamsLoadListener<LinearLayout> {
     @Override
     public void onComponentCreate(LinearLayout rootView) {
         ButterKnife.bind(this, rootView);
-
-        rootView.setGravity(Gravity.CENTER);
-
         mStateParent.setVisibility(View.GONE);
     }
 

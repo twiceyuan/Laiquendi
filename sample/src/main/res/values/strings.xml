@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Laiquendi</string>
     <string name="mock_content">Mock Content</string>
+    <string name="loading">正在加载...</string>
 </resources>
