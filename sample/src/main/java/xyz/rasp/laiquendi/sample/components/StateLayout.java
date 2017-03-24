@@ -22,19 +22,17 @@ import xyz.rasp.laiquendi.sample.R;
 @SuppressWarnings("WeakerAccess")
 @SuperClass(LinearLayout.class)
 @Component(R.layout.component_state)
-public class StateLayout implements ParamsLoadListener {
+public class StateLayout implements ParamsLoadListener<LinearLayout> {
 
     @BindView(R.id.tv_message)   TextView     mTvMessage;
     @BindView(R.id.state_parent) LinearLayout mStateParent;
     @BindView(R.id.iv_empty)     ImageView    mEmptyImage;
 
     @Override
-    public void onComponentCreate(View rootView) {
+    public void onComponentCreate(LinearLayout rootView) {
         ButterKnife.bind(this, rootView);
 
-        if (rootView instanceof LinearLayout) {
-            ((LinearLayout) rootView).setGravity(Gravity.CENTER);
-        }
+        rootView.setGravity(Gravity.CENTER);
 
         mStateParent.setVisibility(View.GONE);
     }

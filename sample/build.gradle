@@ -1,3 +1,13 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'me.tatarka:gradle-retrolambda:3.6.0'
+        classpath 'com.jakewharton:butterknife-gradle-plugin:8.5.1'
+    }
+}
+
 apply plugin: 'com.android.application'
 apply plugin: 'me.tatarka.retrolambda'
 
@@ -14,7 +24,8 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            debuggable true
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -27,15 +38,23 @@ android {
     }
 }
 
+repositories {
+    maven { url 'https://jitpack.io' }
+}
+
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    // provided project(':laiquendi-core')
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+
     compile project(':laiquendi-core')
     annotationProcessor project(':laiquendi-processor')
+    // compile 'com.github.twiceyuan.Laiquendi:laiquendi-core:69c07f6225'
+    // annotationProcessor 'com.github.twiceyuan.Laiquendi:laiquendi-processor:69c07f6225'
 
     compile 'com.jakewharton:butterknife:8.5.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
 
     compile 'com.facebook.stetho:stetho:1.4.2'
     compile 'com.android.support:appcompat-v7:25.3.0'
+
+    // compile 'com.github.twiceyuan:Laiquendi:d74880c981'
 }
