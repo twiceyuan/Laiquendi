@@ -1,4 +1,4 @@
-package xyz.rasp.laiquendi.sample.helper;
+package xyz.rasp.laiquendi.wallpaper.helper;
 
 import android.content.Context;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -13,8 +13,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import io.reactivex.Observable;
-import xyz.rasp.laiquendi.sample.components.LoadFooterView;
-import xyz.rasp.laiquendi.sample.components.StateLayout;
+import xyz.rasp.laiquendi.wallpaper.components.LoadFooterView;
 
 /**
  * Created by twiceYuan on 2017/3/24.
@@ -29,7 +28,6 @@ public class PagingHelper<Model> {
     private LoadFooterView     mLoadFooterView;
     private SwipeRefreshLayout mRefreshLayout;
     private RecyclerView       mRecyclerView;
-    private StateLayout        mStateLayout;
     private DataSource<Model>  mDataSource;
 
     private CommonAdapter<Model, ? extends CommonHolder<Model>> mOriginAdapter;
@@ -69,11 +67,6 @@ public class PagingHelper<Model> {
         return this;
     }
 
-    public PagingHelper<Model> setStateLayout(StateLayout stateLayout) {
-        mStateLayout = stateLayout;
-        return this;
-    }
-
     public void init() {
         Context context = mRecyclerView.getContext();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
@@ -104,10 +97,10 @@ public class PagingHelper<Model> {
                     mOriginAdapter.clear();
                 }
                 if (mPage == 1 && models.size() == 0) {
-                    mStateLayout.showEmpty();
+                    // mStateLayout.showEmpty();
                     return;
                 } else {
-                    mStateLayout.showContent();
+                    // mStateLayout.showContent();
                 }
                 if (models.size() < mSize) {
                     loadComplete();

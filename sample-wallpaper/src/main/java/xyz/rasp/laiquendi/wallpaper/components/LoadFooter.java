@@ -1,4 +1,4 @@
-package xyz.rasp.laiquendi.sample.components;
+package xyz.rasp.laiquendi.wallpaper.components;
 
 import android.text.TextUtils;
 import android.view.View;
@@ -12,7 +12,7 @@ import xyz.rasp.laiquendi.core.Component;
 import xyz.rasp.laiquendi.core.Params;
 import xyz.rasp.laiquendi.core.ParamsLoadListener;
 import xyz.rasp.laiquendi.core.SuperClass;
-import xyz.rasp.laiquendi.sample.R;
+import xyz.rasp.laiquendi.wallpaper.R;
 
 /**
  * Created by twiceYuan on 2017/3/24.
