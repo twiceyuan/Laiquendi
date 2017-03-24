@@ -27,7 +27,7 @@
             android:id="@+id/state"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:params="status: content, emptyString: No Data">
+            app:params="status: empty, emptyString: No Data">
 
             <android.support.v4.widget.NestedScrollView
                 android:layout_width="match_parent"

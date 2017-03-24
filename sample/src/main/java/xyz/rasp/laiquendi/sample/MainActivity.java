@@ -8,10 +8,9 @@ import android.view.MenuItem;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import xyz.rasp.laiquendi.core.Eru;
 import xyz.rasp.laiquendi.sample.components.Header;
-import xyz.rasp.laiquendi.sample.components.HeaderView;
 import xyz.rasp.laiquendi.sample.components.StateLayout;
-import xyz.rasp.laiquendi.sample.components.StateLayoutView;
 
 public class MainActivity extends Activity {
 
@@ -27,8 +26,8 @@ public class MainActivity extends Activity {
         ButterKnife.bind(this);
 
         // Inject
-        header = HeaderView.get(this, R.id.header);
-        state = StateLayoutView.get(this, R.id.state);
+        header = Eru.get(Header.class, this, R.id.header);
+        state = Eru.get(StateLayout.class, this, R.id.state);
 
         header.attach(this);
 
