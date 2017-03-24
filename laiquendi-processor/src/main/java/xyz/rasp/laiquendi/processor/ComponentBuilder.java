@@ -66,6 +66,7 @@ public class ComponentBuilder {
 
     public TypeSpec build() {
         TypeSpec.Builder classBuilder = TypeSpec.classBuilder(mFinalClassName);
+        classBuilder.addJavadoc("Generate by {@link $L}. \n", mOriginClassName);
 
         // 基本属性
 

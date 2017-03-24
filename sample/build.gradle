@@ -46,8 +46,8 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':laiquendi-core')
     annotationProcessor project(':laiquendi-processor')
-    // compile 'com.github.twiceyuan.Laiquendi:laiquendi-core:69c07f6225'
-    // annotationProcessor 'com.github.twiceyuan.Laiquendi:laiquendi-processor:69c07f6225'
+    // compile 'com.github.twiceyuan.Laiquendi:laiquendi-core:0.1'
+    // annotationProcessor 'com.github.twiceyuan.Laiquendi:laiquendi-processor:0.1'
     compile 'com.jakewharton:butterknife:8.5.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
     compile 'com.facebook.stetho:stetho:1.4.2'
@@ -56,6 +56,6 @@ dependencies {
     compile('com.github.twiceyuan:CommonAdapter:0.6.2') {
         exclude group: 'com.android.support', module: 'recyclerview-v7'
     }
-    // compile 'com.github.twiceyuan:Laiquendi:d74880c981'
     compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    compile 'com.github.bumptech.glide:glide:3.7.0'
 }

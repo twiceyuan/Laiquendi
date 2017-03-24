@@ -7,9 +7,13 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
-import android.widget.TextView;
+import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 import com.twiceyuan.commonadapter.library.LayoutId;
+import com.twiceyuan.commonadapter.library.Singleton;
+import com.twiceyuan.commonadapter.library.ViewId;
 import com.twiceyuan.commonadapter.library.adapter.CommonAdapter;
 import com.twiceyuan.commonadapter.library.holder.CommonHolder;
 
@@ -55,6 +59,7 @@ public class PagingActivity extends Activity {
                 .setRefreshLayout(mRefresh)
                 .setStateLayout(Eru.get(StateLayout.class, this, R.id.state))
                 .setDataSource(this::mockDataSource)
+                .setSize(5)
                 .init();
     }
 
@@ -63,10 +68,11 @@ public class PagingActivity extends Activity {
      */
     private Observable<List<String>> mockDataSource(int page, int size) {
 
+        String url = "https://bing.ioliu.cn/v1?w=800&d=%s";
         if (page >= 5) return Observable.just(new ArrayList<>());
 
         return Observable.range(page * size, size)
-                .map(number -> String.format("第 %s 条数据", number))
+                .map(number -> String.format(url, number))
                 .toList()
                 .delay(1, TimeUnit.SECONDS)
                 .toObservable()
@@ -77,12 +83,19 @@ public class PagingActivity extends Activity {
     @LayoutId(R.layout.item_sample)
     public static class ItemHolder extends CommonHolder<String> {
 
-        @BindView(R.id.tv_text) TextView mTvText;
+        @ViewId(R.id.iv_image) ImageView mImageView;
+
+        @Singleton
+        RequestManager mManager;
+
+        @Override
+        public void initSingleton() {
+            mManager = Glide.with(getItemView().getContext());
+        }
 
         @Override
         public void bindData(String s) {
-            ButterKnife.bind(this, getItemView());
-            mTvText.setText(s);
+            mManager.load(s).into(mImageView);
         }
     }
 }

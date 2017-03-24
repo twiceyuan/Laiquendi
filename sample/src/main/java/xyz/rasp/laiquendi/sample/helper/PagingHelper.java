@@ -35,13 +35,18 @@ public class PagingHelper<Model> {
     private CommonAdapter<Model, ? extends CommonHolder<Model>> mOriginAdapter;
 
     private int mPage = 0;
-    private int mSize = 20;
+    private int mSize = 10;
 
     private PagingHelper() {
     }
 
     public static <T> PagingHelper<T> create() {
         return new PagingHelper<>();
+    }
+
+    public PagingHelper<Model> setSize(int size) {
+        mSize = size;
+        return this;
     }
 
     public PagingHelper<Model> setRecyclerView(RecyclerView recyclerView) {
@@ -88,7 +93,6 @@ public class PagingHelper<Model> {
 
     private void onRefresh() {
         mPage = 0;
-        mOriginAdapter.clear();
         loadMore();
     }
 
@@ -96,6 +100,9 @@ public class PagingHelper<Model> {
         synchronized (mIsLoading) {
             loading();
             mDataSource.load(mPage, mSize).subscribe(models -> {
+                if (mPage == 0) {
+                    mOriginAdapter.clear();
+                }
                 if (mPage == 1 && models.size() == 0) {
                     mStateLayout.showEmpty();
                     return;
