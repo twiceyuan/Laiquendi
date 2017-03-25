@@ -12,8 +12,8 @@ import com.twiceyuan.commonadapter.library.holder.CommonHolder;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import io.reactivex.Observable;
 import xyz.rasp.laiquendi.wallpaper.components.LoadFooterView;
+import xyz.rasp.laiquendi.wallpaper.func.Callback;
 
 /**
  * Created by twiceYuan on 2017/3/24.
@@ -92,7 +92,7 @@ public class PagingHelper<Model> {
     private void loadMore() {
         synchronized (mIsLoading) {
             loading();
-            mDataSource.load(mPage, mSize).subscribe(models -> {
+            mDataSource.load(mPage, mSize, models -> {
                 if (mPage == 0) {
                     mOriginAdapter.clear();
                 }
@@ -110,7 +110,7 @@ public class PagingHelper<Model> {
                 mOriginAdapter.notifyDataSetChanged();
                 mPage++;
                 loadable();
-            }, throwable -> loadComplete());
+            });
         }
     }
 
@@ -133,6 +133,6 @@ public class PagingHelper<Model> {
 
     @SuppressWarnings("WeakerAccess")
     public interface DataSource<Model> {
-        Observable<? extends List<Model>> load(int page, int size);
+        void load(int page, int size, Callback<List<Model>> loadCallback);
     }
 }

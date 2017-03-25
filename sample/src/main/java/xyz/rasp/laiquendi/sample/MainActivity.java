@@ -55,9 +55,6 @@ public class MainActivity extends Activity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         header.setTitle((String) item.getTitle());
-        if (item.getTitle().equals("Item3")) {
-            PagingActivity.start(this);
-        }
         return true;
     }
 }
