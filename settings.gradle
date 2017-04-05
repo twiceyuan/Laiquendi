@@ -1,1 +1,1 @@
-include ':sample', ':laiquendi-core', ':laiquendi-processor', ':sample-wallpaper'
+include ':sample', ':laiquendi-core', ':laiquendi-processor'
